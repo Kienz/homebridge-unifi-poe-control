@@ -56,7 +56,7 @@ module.exports = class UniFiPoeControl {
   }
 
   async refreshDevices() {
-    this.log.debug('Refreshing devices...');
+    this.log.info('Refreshing devices...');
 
     try {
       let sites = await this.client.getSites();

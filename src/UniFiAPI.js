@@ -46,12 +46,12 @@ module.exports = class UniFiAPI {
       ...config,
     };
 
-    this.log.debug(`Performing request: ${method} ${url}`);
-    this.log.debug(`Request config: ${JSON.stringify(config)}`);
+    this.log.info(`Performing request: ${method} ${url}`);
+    this.log.info(`Request config: ${JSON.stringify(config)}`);
 
     const result = await this.axios(config);
 
-    this.log.debug(`Response: ${JSON.stringify(result.data)}`);
+    this.log.info(`Response: ${JSON.stringify(result.data)}`);
 
     let csrf = result.headers['x-csrf-token'];
     if (csrf) {
