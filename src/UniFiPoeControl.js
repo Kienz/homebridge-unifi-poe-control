@@ -75,7 +75,10 @@ module.exports = class UniFiPoeControl {
   async loadDevices(site, devices) {
     let foundAccessories = [];
 
+    this.log.info('Load devices...', this.config.ports);
+
     for (let device of devices) {
+      this.log.info('Find device ports...', this.config.ports[device.mac]);
       if (size(this.config.ports[device.mac] > 0)) {
         for (let port of device.port_overrides) {
           if (port && includes(this.config.ports[device.mac], port.port_idx)) {
