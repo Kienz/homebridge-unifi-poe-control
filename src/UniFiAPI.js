@@ -51,7 +51,7 @@ module.exports = class UniFiAPI {
 
     const result = await this.axios(config);
 
-    this.log.info(`Response: ${JSON.stringify(result.data)}`);
+    this.log.debug(`Response: ${JSON.stringify(result.data)}`);
 
     let csrf = result.headers['x-csrf-token'];
     if (csrf) {
