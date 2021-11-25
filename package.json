@@ -1,0 +1,24 @@
+{
+  "name": "homebridge-unifi-poe-control",
+  "version": "0.1.0",
+  "description": "UniFi POE Control for Homebridge",
+  "main": "src/index.js",
+  "repository": "git://github.com/Kienz/homebridge-unifi-poe-control.git",
+  "author": "Stefan Kienzle",
+  "license": "MIT",
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "engines": {
+    "node": ">=16.13.0",
+    "homebridge": ">=1.3.8"
+  },
+  "dependencies": {
+    "axios": "0.24.0",
+    "lodash": "4.17.21",
+    "tough-cookie": "4.0.0"
+  },
+  "devDependencies": {
+    "eslint": "8.3.0"
+  }
+}

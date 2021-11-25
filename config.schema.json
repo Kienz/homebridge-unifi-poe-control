@@ -1,0 +1,47 @@
+{
+  "pluginAlias": "UniFiPoeControl",
+  "pluginType": "platform",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Plugin Name",
+        "description": "This name will appear in your Homebridge log",
+        "type": "string",
+        "default": "UniFiPoeControl",
+        "required": true
+      },
+      "url": {
+        "title": "Controller URL",
+        "description": "The base URL for your UniFi controller",
+        "type": "string",
+        "default": "https://10.0.0.1:8443",
+        "required": true
+      },
+      "username": {
+        "title": "Username",
+        "description": "The username used to log into the UniFi controller",
+        "type": "string",
+        "default": "",
+        "required": true
+      },
+      "password": {
+        "title": "Password",
+        "description": "The password used to log into the UniFi controller",
+        "type": "string",
+        "default": "",
+        "required": true
+      },
+      "refreshInterval": {
+        "title": "Refresh Interval",
+        "description": "Specify the number of milliseconds to wait between updates, default is 60000 ms (60 seconds)",
+        "type": "integer",
+        "default": 60000,
+        "required": false
+      }
+    }
+  },
+  "form": null,
+  "display": null
+}
