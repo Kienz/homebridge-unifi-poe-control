@@ -1,6 +1,7 @@
 const { homebridge, Accessory, UUIDGen } = require('./types');
 const UniFiAPI = require('./UniFiAPI');
 const UniFiDevice = require('./UniFiDevice');
+const { size, includes } = require('lodash');
 
 const PLUGIN_NAME = 'homebridge-unifi-poe-control';
 const PLATFORM_NAME = 'UniFiPoeControl';
@@ -75,9 +76,9 @@ module.exports = class UniFiPoeControl {
     let foundAccessories = [];
 
     for (let device of devices) {
-      if (_.size(this.config.ports[device.mac] > 0)) {
+      if (size(this.config.ports[device.mac] > 0)) {
         for (let port of device.port_overrides) {
-          if (port && _.includes(this.config.ports[device.mac], port.port_idx)) {
+          if (port && includes(this.config.ports[device.mac], port.port_idx)) {
             let accessory = await this.loadDevicePort(site, device, port);  
             if (accessory) {
               foundAccessories.push(accessory);
