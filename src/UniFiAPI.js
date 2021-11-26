@@ -32,7 +32,10 @@ module.exports = class UniFiAPI {
   }
 
   async _performRequest(method, url, data = null, config = null) {
-    let headers = {};
+    let headers = {
+      'Content-Type': 'application/json; charset=utf-8'
+    };
+
     if (this.csrf) {
       headers['x-csrf-token'] = this.csrf;
     }
