@@ -76,12 +76,14 @@ module.exports = class UniFiPoeControl {
     let foundAccessories = [];
 
     for (let device of devices) {
+      this.log.debug('Find matching devices and ports...');
       if (size(this.config.ports[device.mac]) > 0) {
-        this.log.info('Find device ports...', device.mac, this.config.ports[device.mac]);
+        this.log.debug(`Found matching device: ${device.model} / ${device.name} (MAC: ${device.mac})`);
 
         for (let port of device.port_overrides) {
+          let portConfig = find()
           if (port && includes(this.config.ports[device.mac], port.port_idx)) {
-            this.log.info('Find device port...', port.port_idx, JSON.stringify(port));
+            this.log.debug(`Found device port: ${device.model} / ${device.name} (MAC: ${device.mac}) / #${port.port_idx}${port.name ? ' (' + port.name  + ')' : ''}`);
 
             let accessory = await this.loadDevicePort(site, device, port);  
             if (accessory) {
@@ -119,7 +121,7 @@ module.exports = class UniFiPoeControl {
 
   createHomeKitAccessory(site, device, port) {
     let uuid = UUIDGen.generate(device.mac + port.port_idx);
-    let homeKitAccessory = new Accessory(device.name || device.model || device.mac + ' ' + port.name || port_idx, uuid);
+    let homeKitAccessory = new Accessory(port.name || device.name + ' #' + port_idx, uuid);
     homeKitAccessory.context = UniFiDevice.getContextForDevicePort(site, device, port);
     this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [homeKitAccessory]);
     return homeKitAccessory;

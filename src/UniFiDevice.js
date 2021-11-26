@@ -38,9 +38,9 @@ module.exports = class UniFiDevice {
     this.homeKitAccessory.context = UniFiDevice.getContextForDevicePort(site, device, port);
 
     this.homeKitAccessory.getService(Service.AccessoryInformation)
-      .setCharacteristic(Characteristic.Name, device.name || device.model)
+      .setCharacteristic(Characteristic.Name, port.name || device.name || device.model)
       .setCharacteristic(Characteristic.Manufacturer, 'Ubiquiti')
-      .setCharacteristic(Characteristic.Model, device.model)
+      .setCharacteristic(Characteristic.Model, device.name || device.model)
       .setCharacteristic(Characteristic.SerialNumber, device.mac + '-' + port.port_idx);
 
     if (!this.changePending) {
