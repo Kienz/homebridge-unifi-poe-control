@@ -16,6 +16,26 @@ module.exports = class UniFiDevice {
     this.getCharacteristic(Characteristic.On).on('set', this.set.bind(this));
   }
 
+  get site() {
+    return this.homeKitAccessory.context.site;
+  }
+
+  get mac() {
+    return this.homeKitAccessory.context.mac;
+  }
+
+  get device_id() {
+    return this.homeKitAccessory.context.device_id;
+  }
+
+  get port_overrides() {
+    return this.homeKitAccessory.context.port_overrides;
+  }
+
+  get port_idx() {
+    return this.homeKitAccessory.context.port_idx;
+  }
+
   matches(device, port) {
     return (
       this.mac === device.mac &&
@@ -29,8 +49,7 @@ module.exports = class UniFiDevice {
       mac: device.mac,
       device_id: device.device_id,
       port_overrides: device.port_overrides,
-      port_idx: port.port_idx,
-      port_name: port.name
+      port_idx: port.port_idx
     };
   }
 
