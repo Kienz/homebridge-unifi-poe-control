@@ -117,7 +117,7 @@ module.exports = class UniFiPoeControl {
       this.accessories.push(accessory);
     } else {
       this.log.info(`Update existing accessory`);
-      accessory.homeKitAccessory = updateHomeKitAccessory(accessory.homeKitAccessory, site, device, port);
+      accessory.homeKitAccessory = this.updateHomeKitAccessory(accessory.homeKitAccessory, site, device, port);
     }
 
     await accessory.update(site, device, port);
