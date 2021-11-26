@@ -112,7 +112,7 @@ module.exports = class UniFiPoeControl {
       this.accessories.push(accessory);
     }
 
-    await accessory.update(site, device);
+    await accessory.update(site, device, port);
 
     return accessory;
   }
