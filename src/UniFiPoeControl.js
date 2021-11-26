@@ -83,13 +83,9 @@ module.exports = class UniFiPoeControl {
         for (let port of device.port_overrides) {
           let devicePortConfig = find(this.config.ports[device.mac], {idx: port.port_idx});
           if (devicePortConfig) {
-            this.log.info(`Device port config ${JSON.stringify(devicePortConfig)}`);
-            port.name = devicePortConfig.name || port.name;
-            port.onMode = port.onMode || 'auto';
+            this.log.debug(`Found device port: ${device.model} / ${device.name} (MAC: ${device.mac}) / Port #${port.port_idx} / PortConfig: ${JSON.stringify(devicePortConfig)}`);
 
-            this.log.debug(`Found device port: ${device.model} / ${device.name} (MAC: ${device.mac}) / #${port.port_idx}${port.name ? ' (' + port.name  + ')' : ''}`);
-
-            let accessory = await this.loadDevicePort(site, device, port);  
+            let accessory = await this.loadDevicePort(site, device, port, devicePortConfig) ;  
             if (accessory) {
               foundAccessories.push(accessory);
             }
@@ -108,35 +104,26 @@ module.exports = class UniFiPoeControl {
     this.accessories = foundAccessories;
   }
 
-  async loadDevicePort(site, device, port) {
+  async loadDevicePort(site, device, port, devicePortConfig) {
     let accessory = this.accessories.find(a => a.matches(device, port));
 
     if (!accessory) {
-      this.log.info(`Setting up new accessory: ${device.model} (MAC: ${device.mac}) / #${port.port_idx} (${port.name})`);
-      let homeKitAccessory = this.createHomeKitAccessory(site, device, port);
+      this.log.info(`Setting up new accessory: ${device.model} (MAC: ${device.mac}) / #${port.port_idx} (${devicePortConfig.name || port.name})`);
+      let homeKitAccessory = this.createHomeKitAccessory(site, device, port, devicePortConfig);
       accessory = new UniFiDevice(this, homeKitAccessory);
       this.accessories.push(accessory);
-    } else {
-      this.log.info(`Update existing accessory`);
-      accessory.homeKitAccessory = this.updateHomeKitAccessory(accessory.homeKitAccessory, site, device, port);
     }
 
-    await accessory.update(site, device, port);
+    await accessory.update(site, device, port, devicePortConfig);
 
     return accessory;
   }
 
-  createHomeKitAccessory(site, device, port) {
+  createHomeKitAccessory(site, device, port, devicePortConfig) {
     let uuid = UUIDGen.generate(device.mac + port.port_idx);
-    let homeKitAccessory = new Accessory(port.name || device.name + ' #' + port_idx, uuid);
+    let homeKitAccessory = new Accessory(devicePortConfig.name || port.name || device.name + ' - Port ' + port_idx, uuid);
     homeKitAccessory.context = UniFiDevice.getContextForDevicePort(site, device, port);
     this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [homeKitAccessory]);
-    return homeKitAccessory;
-  }
-
-  updateHomeKitAccessory(homeKitAccessory, site, device, port) {
-    homeKitAccessory.context = UniFiDevice.getContextForDevicePort(site, device, port);
-    this.api.updatePlatformAccessories([homeKitAccessory]);
     return homeKitAccessory;
   }
 
