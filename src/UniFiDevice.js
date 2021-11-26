@@ -32,6 +32,10 @@ module.exports = class UniFiDevice {
     return this.homeKitAccessory.context.port_overrides;
   }
 
+  get port_onMode() {
+    return this.homeKitAccessory.context.port_onMode;
+  }
+
   get port_idx() {
     return this.homeKitAccessory.context.port_idx;
   }
@@ -49,6 +53,7 @@ module.exports = class UniFiDevice {
       mac: device.mac,
       device_id: device.device_id,
       port_overrides: device.port_overrides,
+      port_onMode: port.onMode,
       port_idx: port.port_idx
     };
   }
@@ -84,7 +89,7 @@ module.exports = class UniFiDevice {
   _setAllProperties() {
     for (let override of this.port_overrides) {
       if (override.port_idx === this.port_idx) {
-        override.poe_mode = this.getCharacteristic(Characteristic.On).value ? 'auto' : 'off'
+        override.poe_mode = this.getCharacteristic(Characteristic.On).value ? this.port_onMode : 'off'
       }
     }
 

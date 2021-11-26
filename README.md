@@ -14,8 +14,13 @@ Use the settings UI in Homebridge Config UI X to configure your controller URL, 
       "url": "https://CONTROLLER_ADDRESS:8443",
       "username": "YOUR_USERNAME",
       "password": "YOUR_PASSWORD",
+      "refreshInterval": 60 // seconds - optional
       "ports": {
-          "aa:bb:cc:dd:ee:ff": [1]
+          "aa:bb:cc:dd:ee:ff": [{
+            idx: 17,
+            name: 'ALTERNATIVE NAME',  // optional
+            onMode: 'auto' // optional
+          }]
       }
     }
   ]
