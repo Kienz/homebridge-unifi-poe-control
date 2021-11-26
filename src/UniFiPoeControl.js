@@ -83,6 +83,7 @@ module.exports = class UniFiPoeControl {
         for (let port of device.port_overrides) {
           let devicePortConfig = find(this.config.ports[device.mac], {idx: port.port_idx});
           if (devicePortConfig) {
+            this.log.info(`Device port config ${JSON.stringify(devicePortConfig)}`);
             port.name = devicePortConfig.name || port.name;
             port.onMode = port.onMode || 'auto';
 
