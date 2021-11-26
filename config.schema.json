@@ -39,6 +39,56 @@
         "type": "integer",
         "default": 60000,
         "required": false
+      },
+      "ports": {
+        "type": "array",
+        "items": {
+          "title": "POE Ports",
+          "type": "object",
+          "properties": {
+            "mac": {
+              "title": "MAC Address",
+              "type": "string",
+              "required": true,
+              "description": "Lowercase MAC Address of the UniFi Device (Switch)",
+              "pattern": "^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$"
+            },
+            "idx": {
+              "title": "Port Index Number",
+              "type": "integer",
+              "required": true,
+              "description": "Port Number of the UniFi Device (Switch)",
+              "pattern": "^[1-9][0-9]?$|^100$"
+            },
+            "name": {
+              "title": "HomeKit Accessory Name",
+              "type": "string",
+              "required": false,
+              "description": "Name of the HomeKit Accessory - if not defined name attribut of port is read."
+            },
+            "onMode": {
+              "title": "'ON'-Value of the POE Port",
+              "type": "string",
+              "required": false,
+              "default": "auto",
+              "description": "Which 'ON' Value should be used",
+              "oneOf": [
+                {
+                  "title": "Auto",
+                  "enum": [
+                    "auto"
+                  ]
+                },
+                {
+                  "title": "24V Passive",
+                  "enum": [
+                    "pasv24"
+                  ]
+                }
+              ]
+            }
+          }
+        }
       }
     }
   },
