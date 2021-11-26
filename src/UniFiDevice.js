@@ -84,7 +84,7 @@ module.exports = class UniFiDevice {
   _setAllProperties() {
     for (let override of this.port_overrides) {
       if (override.port_idx === this.port_idx) {
-        override.poe_mode = this.getCharacteristic(Characteristic.On).value ? null : 'off'
+        override.poe_mode = this.getCharacteristic(Characteristic.On).value ? 'auto' : 'off'
       }
     }
 
