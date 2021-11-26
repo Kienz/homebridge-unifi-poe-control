@@ -111,10 +111,13 @@ module.exports = class UniFiPoeControl {
     let accessory = this.accessories.find(a => a.matches(device, port));
 
     if (!accessory) {
-      this.log.info(`Setting up new device port: ${device.model} (MAC: ${device.mac}) / #${port.port_idx} (${port.name})`);
+      this.log.info(`Setting up new accessory: ${device.model} (MAC: ${device.mac}) / #${port.port_idx} (${port.name})`);
       let homeKitAccessory = this.createHomeKitAccessory(site, device, port);
       accessory = new UniFiDevice(this, homeKitAccessory);
       this.accessories.push(accessory);
+    } else {
+      this.log.info(`Update existing accessory`);
+      accessory.homeKitAccessory = updateHomeKitAccessory(accessory.homeKitAccessory, site, device, port);
     }
 
     await accessory.update(site, device, port);
@@ -127,6 +130,12 @@ module.exports = class UniFiPoeControl {
     let homeKitAccessory = new Accessory(port.name || device.name + ' #' + port_idx, uuid);
     homeKitAccessory.context = UniFiDevice.getContextForDevicePort(site, device, port);
     this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [homeKitAccessory]);
+    return homeKitAccessory;
+  }
+
+  updateHomeKitAccessory(homeKitAccessory, site, device, port) {
+    homeKitAccessory.context = UniFiDevice.getContextForDevicePort(site, device, port);
+    this.api.updatePlatformAccessories([homeKitAccessory]);
     return homeKitAccessory;
   }
 
