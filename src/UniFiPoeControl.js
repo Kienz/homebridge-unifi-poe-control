@@ -81,8 +81,7 @@ module.exports = class UniFiPoeControl {
         this.log.debug(`Found matching device: ${device.model} / ${device.name} (MAC: ${device.mac})`);
 
         for (let port of device.port_overrides) {
-          let portConfig = find()
-          if (port && includes(this.config.ports[device.mac], port.port_idx)) {
+          if (includes(this.config.ports[device.mac], port.port_idx)) {
             this.log.debug(`Found device port: ${device.model} / ${device.name} (MAC: ${device.mac}) / #${port.port_idx}${port.name ? ' (' + port.name  + ')' : ''}`);
 
             let accessory = await this.loadDevicePort(site, device, port);  
