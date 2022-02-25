@@ -40,35 +40,40 @@ module.exports = class UniFiDevice {
     return this.homeKitAccessory.context.port_idx;
   }
 
-  matches(device, port) {
+  matches(device, port, devicePortConfig) {
     return (
       this.mac === device.mac &&
-      this.port_idx === port.port_idx
+      this.port_idx === port.port_idx &&
+      this.port_onMode === devicePortConfig.onMode
     );
   }
 
-  static getContextForDevicePort(site, device, port) {
+  static getContextForDevicePort(site, device, port, devicePortConfig) {
     return {
       site,
       mac: device.mac,
       device_id: device.device_id,
       port_overrides: device.port_overrides,
-      port_onMode: port.onMode,
+      port_onMode: devicePortConfig.onMode,
       port_idx: port.port_idx
     };
   }
 
   async update(site, device, port, devicePortConfig) {
-    this.homeKitAccessory.context = UniFiDevice.getContextForDevicePort(site, device, port);
+    this.homeKitAccessory.context = UniFiDevice.getContextForDevicePort(site, device, port, devicePortConfig);
 
     this.homeKitAccessory.getService(Service.AccessoryInformation)
-      .setCharacteristic(Characteristic.Name, devicePortConfig.name || port.name || device.name + ' - Port ' + port_idx)
+      .setCharacteristic(Characteristic.Name, devicePortConfig.name || port.name || device.name + ' - Port ' + port.port_idx)
       .setCharacteristic(Characteristic.Manufacturer, 'Stefan Kienzle')
       .setCharacteristic(Characteristic.Model, device.name || device.model)
-      .setCharacteristic(Characteristic.SerialNumber, device.mac + '-' + port.port_idx);
+      .setCharacteristic(Characteristic.SerialNumber, device.mac + '-' + port.port_idx + (devicePortConfig.onMode === 'power_cycle' ? '-pc' : ''));
 
     if (!this.changePending) {
-      this.getCharacteristic(Characteristic.On).updateValue(port.poe_mode !== 'off');
+      if (this.port_onMode === 'power_cycle') {
+        this.getCharacteristic(Characteristic.On).updateValue(false);
+      } else {
+        this.getCharacteristic(Characteristic.On).updateValue(port.poe_mode !== 'off');
+      }
     }
   }
 
@@ -87,20 +92,49 @@ module.exports = class UniFiDevice {
   }
 
   _setAllProperties() {
-    for (let override of this.port_overrides) {
-      if (override.port_idx === this.port_idx) {
-        override.poe_mode = this.getCharacteristic(Characteristic.On).value ? this.port_onMode : 'off'
+    // Just power cycle the port - no change to port config
+    if (this.port_onMode === 'power_cycle') {
+      let poePortEnabled = false;
+
+      for (let override of this.port_overrides) {
+        if (override.port_idx === this.port_idx) {
+          poePortEnabled = override.poe_mode !== 'off';
+        }
       }
+
+      if (!poePortEnabled) {
+        this.plugin.log.info(`Device ${this.device_id}: Power Cycle not available - POE is turned off`);
+        this.changePending = false;
+        return;
+      }
+
+      let properties = {
+        'mac': this.mac,
+        'port_idx': `${this.port_idx}`,
+        'cmd': 'power-cycle'
+      };
+
+      this.changePending = false;
+
+      return this.setPowerCycle(properties);
+
+    // Change port config to new poe_mode value
+    } else {
+      for (let override of this.port_overrides) {
+        if (override.port_idx === this.port_idx) {
+          override.poe_mode = this.getCharacteristic(Characteristic.On).value ? this.port_onMode : 'off'
+        }
+      }
+
+      let properties = {
+        port_overrides: this.port_overrides,
+        device_id: this.device_id
+      };
+
+      this.changePending = false;
+
+      return this.setProperties(properties);
     }
-
-    let properties = {
-      port_overrides: this.port_overrides,
-      device_id: this.device_id
-    };
-
-    this.changePending = false;
-
-    return this.setProperties(properties);
   }
 
   async setProperties(properties) {
@@ -108,6 +142,17 @@ module.exports = class UniFiDevice {
 
     try {
       await this.plugin.client.setDevice(this.site.name, this.device_id, properties);
+    } catch (e) {
+      this.plugin.log.error(e);
+      this.plugin.log.error(e.response.data);
+    }
+  }
+
+  async setPowerCycle(properties) {
+    this.plugin.log.info(`Device ${this.device_id}: Power Cylce: ${JSON.stringify(properties)}`);
+
+    try {
+      await this.plugin.client.setPowerCycle(this.site.name, properties);
     } catch (e) {
       this.plugin.log.error(e);
       this.plugin.log.error(e.response.data);

@@ -84,6 +84,12 @@
                   "enum": [
                     "pasv24"
                   ]
+                },
+                {
+                  "title": "Power Cycle",
+                  "enum": [
+                    "power_cycle"
+                  ]
                 }
               ]
             }

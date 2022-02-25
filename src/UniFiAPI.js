@@ -117,4 +117,9 @@ module.exports = class UniFiAPI {
     let response = await this.request('PUT', this._prefixUrl(`api/s/${site}/rest/device/${deviceId}`), data);
     return response.data;
   }
+
+  async setPowerCycle(site, data) {
+    let response = await this.request('POST', this._prefixUrl(`api/s/${site}/cmd/devmgr`), data);
+    return response.data;
+  }
 };
