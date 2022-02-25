@@ -126,7 +126,7 @@ module.exports = class UniFiPoeControl {
   }
 
   createHomeKitAccessory(site, device, port, devicePortConfig) {
-    let uuid = UUIDGen.generate(device.mac + port.port_idx + devicePortConfig.onMode === 'power_cycle' ? 'pc' : '');
+    let uuid = UUIDGen.generate(device.mac + port.port_idx + (devicePortConfig.onMode === 'power_cycle' ? 'pc' : ''));
     let homeKitAccessory = new Accessory(devicePortConfig.name || port.name || device.name + ' - Port ' + port_idx, uuid);
     homeKitAccessory.context = UniFiDevice.getContextForDevicePort(site, device, port, devicePortConfig);
     this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [homeKitAccessory]);
