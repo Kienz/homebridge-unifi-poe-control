@@ -40,6 +40,26 @@
         "default": 60000,
         "required": false
       },
+      "apiMode": {
+        "title": "API Mode",
+        "description": "This plugin automatically tries to find out which API (UniFi OS or old) is avaiable. If you have problems, you can force this plugin to use specific API",
+        "type": "string",
+        "required": false,
+        "oneOf": [
+          {
+            "title": "UniFi OS API",
+            "enum": [
+              "UniFiOS"
+            ]
+          },
+          {
+            "title": "Old API",
+            "enum": [
+              "old"
+            ]
+          }
+        ]
+      },
       "ports": {
         "type": "array",
         "items": {

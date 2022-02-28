@@ -2,6 +2,9 @@
 
 ## Releases
 
+### v1.1.0
+- New options `apiMode` to force the plugin to use UniFi OS or old API. (Default = null - options: `UniFiOS` | `old`)
+
 ### v1.0.1
 - Bugfix generate UUID - `Error getting devices: Error: Cannot add a bridged Accessory with the same UUID as another bridged Accessory`
 

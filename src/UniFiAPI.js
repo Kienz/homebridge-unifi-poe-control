@@ -9,6 +9,7 @@ module.exports = class UniFiAPI {
     this.url = options.url;
     this.username = options.username;
     this.password = options.password;
+    this.apiMode = options.apiMode;
 
     // Set up local axios instance
     this.axios = axios.create({
@@ -64,19 +65,26 @@ module.exports = class UniFiAPI {
     return result;
   }
 
-  async checkMode() {
-    // Check whether we are connecting to a UDM or an older controller.
-    // The UDM responds with HTTP code 200 when you peform a GET request to /,
+  async checkUniFiOS() {
+    // Check whether we are connecting to a UniFi OS controller or old controller (CloudKey Gen1, USG).
+    // The UniFi OS responds with HTTP code 200 when you peform a GET request to /,
     // while older controllers redirect you to /manage.
-    // This detection method was adapted from unifi-poller.
 
-    this.isNewMode = false;
+    if (this.apiMode === 'UniFiOS') {
+      this.isUniFiOS = true;
+      return;  
+    } else if (this.apiMode === 'old') {
+      this.isUniFiOS = false;
+      return;
+    }
+
+    this.isUniFiOS = false;
 
     try {
       let response = await this._performRequest('GET', '/', null, { maxRedirects: 0, validateStatus: false });
 
       if (response.status === 200) {
-        this.isNewMode = true;
+        this.isUniFiOS = true;
       }
     } catch (e) {
       //
@@ -84,12 +92,12 @@ module.exports = class UniFiAPI {
   }
 
   async login() {
-    await this.checkMode();
+    await this.checkUniFiOS();
 
     // The api/auth/login will return a 404 if we already have login cookies.
     this.axios.cookieJar.removeAllCookiesSync();
 
-    let url = (this.isNewMode) ? 'api/auth/login' : 'api/login';
+    let url = (this.isUniFiOS) ? 'api/auth/login' : 'api/login';
 
     await this._performRequest('POST', url, {
       username: this.username,
@@ -100,7 +108,7 @@ module.exports = class UniFiAPI {
   }
 
   _prefixUrl(url) {
-    return (this.isNewMode) ? `proxy/network/${url}` : url;
+    return (this.isUniFiOS) ? `proxy/network/${url}` : url;
   }
 
   async getSites() {
