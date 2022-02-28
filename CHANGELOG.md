@@ -2,6 +2,9 @@
 
 ## Releases
 
+### v1.1.1
+- Bugfix new option `apiMode`
+
 ### v1.1.0
 - New options `apiMode` to force the plugin to use UniFi OS or old API. (Default = null - options: `UniFiOS` | `old`)
 

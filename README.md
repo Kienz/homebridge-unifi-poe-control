@@ -15,6 +15,7 @@ Use the settings UI in Homebridge Config UI X to configure your controller URL, 
       "username": "YOUR_USERNAME",
       "password": "YOUR_PASSWORD",
       "refreshInterval": 60 // seconds - optional
+      "apiMode": null, // optional
       "ports": {
           [{
             "mac": "aa:bb:cc:dd:ee:ff",

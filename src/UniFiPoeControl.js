@@ -33,6 +33,7 @@ module.exports = class UniFiPoeControl {
       url: this.config.url,
       username: this.config.username,
       password: this.config.password,
+      apiMode: this.config.apiMode
     }, this.log);
   }
 
