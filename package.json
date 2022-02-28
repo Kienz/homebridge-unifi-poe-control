@@ -1,6 +1,6 @@
 {
   "name": "homebridge-unifi-poe-control",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "UniFi POE Control for Homebridge",
   "main": "src/index.js",
   "repository": "git://github.com/Kienz/homebridge-unifi-poe-control.git",
