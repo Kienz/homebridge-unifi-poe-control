@@ -1,5 +1,4 @@
 # Homebridge UniFi POE Control
-# Homebridge UniFi Protect
 [![Downloads](https://img.shields.io/npm/dt/homebridge-unifi-poe-control?color=%230559C9&logo=icloud&logoColor=%23FFFFFF&style=for-the-badge)](https://www.npmjs.com/package/homebridge-unifi-poe-control)
 [![Version](https://img.shields.io/npm/v/homebridge-unifi-poe-control?color=%230559C9&label=Latest%20Version&logo=ubiquiti&logoColor=%23FFFFFF&style=for-the-badge)](https://www.npmjs.com/package/homebridge-poe-control)
 
