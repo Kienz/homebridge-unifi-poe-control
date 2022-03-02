@@ -24,11 +24,15 @@ module.exports = class UniFiAPI {
     try {
       return await this._performRequest(method, url, data);
     } catch (e) {
-      this.log.error('Error, logging in and trying again');
+      this.log.error(`Request-Error ${url} ${e}`);
 
-      // Log in and try again
-      await this.login();
-      return this._performRequest(method, url, data);
+      if ([401, 403].includes(e.response.status)) {
+        this.log.debug('Login and try again request');
+
+        // Log in and try again
+        await this.login();
+        return this._performRequest(method, url, data);
+      }
     }
   }
 
@@ -72,7 +76,7 @@ module.exports = class UniFiAPI {
 
     if (this.apiMode === 'UniFiOS') {
       this.isUniFiOS = true;
-      return;  
+      return;
     } else if (this.apiMode === 'old') {
       this.isUniFiOS = false;
       return;
@@ -86,9 +90,7 @@ module.exports = class UniFiAPI {
       if (response.status === 200) {
         this.isUniFiOS = true;
       }
-    } catch (e) {
-      //
-    }
+    } catch (e) { }
   }
 
   async login() {
@@ -104,7 +106,7 @@ module.exports = class UniFiAPI {
       password: this.password,
     });
 
-    this.log.info('Successfully logged into UniFi controller');
+    this.log.info('Successfully logged in to UniFi controller');
   }
 
   _prefixUrl(url) {

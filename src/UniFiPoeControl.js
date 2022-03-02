@@ -67,10 +67,7 @@ module.exports = class UniFiPoeControl {
 
         await this.loadDevices(site, devices.data);
       }
-    } catch (e) {
-      this.log.error(`Error getting devices: ${e}`);
-      throw e;
-    }
+    } catch (e) { }
   }
 
   async loadDevices(site, devices) {
@@ -91,7 +88,7 @@ module.exports = class UniFiPoeControl {
             if (devicePortConfig) {
               this.log.debug(`Found device port: ${device.model} / ${device.name} (MAC: ${device.mac}) / Port #${port.port_idx} / PortConfig: ${JSON.stringify(devicePortConfig)}`);
 
-              let accessory = await this.loadDevicePort(site, device, port, devicePortConfig) ;  
+              let accessory = await this.loadDevicePort(site, device, port, devicePortConfig) ;
               if (accessory) {
                 foundAccessories.push(accessory);
               }
