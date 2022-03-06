@@ -45,6 +45,11 @@ module.exports = class UniFiAPI {
       headers['x-csrf-token'] = this.csrf;
     }
 
+    if (!url || !this.url) {
+      this.log.error(`Please define a value for "url" in the config.`);
+      return;
+    }
+
     config = {
       method,
       url,
@@ -101,12 +106,16 @@ module.exports = class UniFiAPI {
 
     let url = (this.isUniFiOS) ? 'api/auth/login' : 'api/login';
 
-    await this._performRequest('POST', url, {
-      username: this.username,
-      password: this.password,
-    });
+    try {
+      await this._performRequest('POST', url, {
+        username: this.username,
+        password: this.password,
+      });
 
-    this.log.info('Successfully logged in to UniFi controller');
+      this.log.info('Successfully logged in to UniFi controller');
+    } catch (e) {
+      this.log.error(`Login error ${e} ${url}`);
+    }
   }
 
   _prefixUrl(url) {

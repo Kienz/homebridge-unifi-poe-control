@@ -2,6 +2,9 @@
 
 ## Releases
 
+### v1.1.3
+- Housekeeping
+
 ### v1.1.2
 - Housekeeping
 
