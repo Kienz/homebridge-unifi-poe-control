@@ -144,7 +144,9 @@ module.exports = class UniFiDevice {
       await this.plugin.client.setDevice(this.site.name, this.device_id, properties);
     } catch (e) {
       this.plugin.log.error(e);
-      this.plugin.log.error(e.response.data);
+      if (e.response) {
+        this.plugin.log.error(e.response.data);
+      }
     }
   }
 
@@ -155,7 +157,9 @@ module.exports = class UniFiDevice {
       await this.plugin.client.setPowerCycle(this.site.name, properties);
     } catch (e) {
       this.plugin.log.error(e);
-      this.plugin.log.error(e.response.data);
+      if (e.response) {
+        this.plugin.log.error(e.response.data);
+      }
     }
   }
 
