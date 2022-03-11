@@ -2,6 +2,11 @@
 
 ## Releases
 
+### v1.1.4
+- Housekeeping
+- Add funding option in Homebridge Plugin search
+- Add "verified-by-homebridge" Badge
+
 ### v1.1.3
 - Housekeeping
 

@@ -1,7 +1,6 @@
 const { homebridge, Accessory, UUIDGen } = require('./types');
 const UniFiAPI = require('./UniFiAPI');
 const UniFiDevice = require('./UniFiDevice');
-const { find } = require('lodash');
 
 const PLUGIN_NAME = 'homebridge-unifi-poe-control';
 const PLATFORM_NAME = 'UniFiPoeControl';
