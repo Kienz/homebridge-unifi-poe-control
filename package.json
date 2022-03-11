@@ -20,5 +20,9 @@
   },
   "devDependencies": {
     "eslint": "8.3.0"
+  },
+  "funding": {
+    "type" : "paypal",
+    "url" : "https://paypal.me/kienzs"
   }
 }

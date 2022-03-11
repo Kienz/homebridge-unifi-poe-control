@@ -1,6 +1,7 @@
 # Homebridge UniFi POE Control
 [![Downloads](https://img.shields.io/npm/dt/homebridge-unifi-poe-control?color=%230559C9&logo=icloud&logoColor=%23FFFFFF&style=for-the-badge)](https://www.npmjs.com/package/homebridge-unifi-poe-control)
 [![Version](https://img.shields.io/npm/v/homebridge-unifi-poe-control?color=%230559C9&label=Latest%20Version&logo=ubiquiti&logoColor=%23FFFFFF&style=for-the-badge)](https://www.npmjs.com/package/homebridge-poe-control)
+[![verified-by-homebridge](https://img.shields.io/badge/homebridge-verified-blueviolet?color=%23491F59&style=for-the-badge&logoColor=%23FFFFFF&logo=homebridge)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins#verified-plugins)
 
 HomeKit support to control the POE status of UniFi Switches using [Homebridge](https://homebridge.io).
 With `homebridge-unifi-poe-control` you can enable/disable or Powercycle POE ports of UniFi Switches. Per port you can define two HomeKit switches - one for On/Off state und one for PowerCycle.
