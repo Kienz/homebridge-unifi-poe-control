@@ -2,6 +2,11 @@
 
 ## Releases
 
+### v1.2.0
+- Refresh devices before update to get current config - Fixes https://github.com/Kienz/homebridge-unifi-poe-control/issues/4
+- Add new "port_override" item if no port override exists - Fixes https://github.com/Kienz/homebridge-unifi-poe-control/issues/3
+- Housekeeping
+
 ### v1.1.4
 - Housekeeping
 - Add funding option in Homebridge Plugin search

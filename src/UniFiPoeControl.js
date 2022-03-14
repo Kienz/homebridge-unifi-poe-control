@@ -75,22 +75,26 @@ module.exports = class UniFiPoeControl {
     for (let device of devices) {
       this.log.debug('Find matching devices and ports...');
 
-      if (device.port_overrides) {
-        for (let port of device.port_overrides) {
-          for (let portConfig of this.config.ports) {
-            let devicePortConfig;
+      for (let devicePortConfig of this.config.ports) {
+        if (devicePortConfig.mac === device.mac) {
+          if (Array.isArray(device.port_table)) {
 
-            if (portConfig.mac === device.mac && portConfig.idx === port.port_idx) {
-              devicePortConfig = portConfig;
+            // Exists port idx in port_table attribute - otherwise the config is wrong
+            let port = device.port_table.find(port => port.port_idx === devicePortConfig.idx);
+
+            if (!port) {
+              this.log.warn(`Port config is wrong - idx of port doesn't exist in device: ${device.model} / ${device.name} (MAC: ${device.mac})`)
+              continue;
             }
 
-            if (devicePortConfig) {
-              this.log.debug(`Found device port: ${device.model} / ${device.name} (MAC: ${device.mac}) / Port #${port.port_idx} / PortConfig: ${JSON.stringify(devicePortConfig)}`);
+            this.log.debug(`Found device port: ${device.model} / ${device.name} (MAC: ${device.mac}) / Port #${port.port_idx}`);
 
-              let accessory = await this.loadDevicePort(site, device, port, devicePortConfig) ;
-              if (accessory) {
-                foundAccessories.push(accessory);
-              }
+            // Set name attribute to use in HomeKit
+            devicePortConfig.name = devicePortConfig.name || (port.name + (devicePortConfig.onMode === 'power_cycle' ? ' - PowerCycle' : ''));
+
+            let accessory = await this.loadDevicePort(site, device, port, devicePortConfig) ;
+            if (accessory) {
+              foundAccessories.push(accessory);
             }
           }
         }
@@ -108,11 +112,12 @@ module.exports = class UniFiPoeControl {
   }
 
   async loadDevicePort(site, device, port, devicePortConfig) {
-    let accessory = this.accessories.find(a => a.matches(device, port, devicePortConfig));
+    let accessory = this.accessories.find(a => a.matches(device, devicePortConfig));
 
     if (!accessory) {
-      this.log.info(`Setting up new accessory: ${device.model} (MAC: ${device.mac}) / #${port.port_idx} (${devicePortConfig.name || port.name})`);
       let homeKitAccessory = this.createHomeKitAccessory(site, device, port, devicePortConfig);
+      this.log.info(`Setting up new accessory: ${device.model} (MAC: ${devicePortConfig.mac}) / #${devicePortConfig.idx} (${devicePortConfig.name})`);
+
       accessory = new UniFiDevice(this, homeKitAccessory);
       this.accessories.push(accessory);
     }
@@ -123,10 +128,12 @@ module.exports = class UniFiPoeControl {
   }
 
   createHomeKitAccessory(site, device, port, devicePortConfig) {
-    let uuid = UUIDGen.generate(device.mac + port.port_idx + (devicePortConfig.onMode === 'power_cycle' ? 'pc' : ''));
-    let homeKitAccessory = new Accessory(devicePortConfig.name || port.name || device.name + ' - Port ' + port_idx, uuid);
+    let uuid = UUIDGen.generate(devicePortConfig.mac + devicePortConfig.idx + (devicePortConfig.onMode === 'power_cycle' ? 'pc' : ''));
+    let homeKitAccessory = new Accessory(devicePortConfig.name, uuid);
+
     homeKitAccessory.context = UniFiDevice.getContextForDevicePort(site, device, port, devicePortConfig);
     this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [homeKitAccessory]);
+
     return homeKitAccessory;
   }
 
@@ -134,6 +141,7 @@ module.exports = class UniFiPoeControl {
   configureAccessory(homeKitAccessory) {
     // Make sure we haven't set up this accessory already
     let accessory = this.accessories.find(a => a.homeKitAccessory === homeKitAccessory);
+
     if (accessory) {
       return;
     }
