@@ -30,13 +30,14 @@ That said, **I strongly recommend creating a local user just for Homebridge inst
       "password": "YOUR_PASSWORD",
       "refreshInterval": 60000 // miliseconds (60 seconds, recommended) - optional
       "apiMode": null, // optional ("old" | "UniFiOS")
-      "ports": {
-          [{
+      "ports": [
+          {
             "mac": "aa:bb:cc:dd:ee:ff",
             "idx": 17,
             "name": "ALTERNATIVE NAME",  // optional
             "onMode": "auto" // optional ("auto" | "pasv24" | "power_cycle")
-          }]
+          }
+      ]
       }
     }
   ]
