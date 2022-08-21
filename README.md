@@ -28,7 +28,7 @@ That said, **I strongly recommend creating a local user just for Homebridge inst
       "url": "https://CONTROLLER_ADDRESS:443",
       "username": "YOUR_USERNAME",
       "password": "YOUR_PASSWORD",
-      "refreshInterval": 60 // seconds - optional
+      "refreshInterval": 60000 // miliseconds (60 seconds, recommended) - optional
       "apiMode": null, // optional ("old" | "UniFiOS")
       "ports": {
           [{
