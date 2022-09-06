@@ -28,16 +28,16 @@ That said, **I strongly recommend creating a local user just for Homebridge inst
       "url": "https://CONTROLLER_ADDRESS:443",
       "username": "YOUR_USERNAME",
       "password": "YOUR_PASSWORD",
-      "refreshInterval": 60 // seconds - optional
+      "refreshInterval": 60, // seconds - optional
       "apiMode": null, // optional ("old" | "UniFiOS")
-      "ports": {
-          [{
-            "mac": "aa:bb:cc:dd:ee:ff",
-            "idx": 17,
-            "name": "ALTERNATIVE NAME",  // optional
+      "ports": [
+        {
+            "mac": "aa:bb:cc:dd:ee:ff", // mac address of the switch
+            "idx": 17, // port number on the switch
+            "name": "ALTERNATIVE NAME", // optional
             "onMode": "auto" // optional ("auto" | "pasv24" | "power_cycle")
-          }]
-      }
+        }
+      ]
     }
   ]
 }
