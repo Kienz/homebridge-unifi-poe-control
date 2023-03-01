@@ -1,5 +1,6 @@
 {
   "name": "homebridge-unifi-poe-control",
+  "displayName": "Unifi PoE Control",
   "version": "1.2.1",
   "description": "UniFi POE Control for Homebridge",
   "main": "src/index.js",
