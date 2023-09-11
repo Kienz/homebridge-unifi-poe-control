@@ -16,7 +16,7 @@
   "dependencies": {
     "axios": "0.24.0",
     "lodash": "4.17.21",
-    "tough-cookie": "4.0.0"
+    "tough-cookie": "4.1.3"
   },
   "devDependencies": {
     "eslint": "8.3.0"
