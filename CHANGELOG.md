@@ -2,6 +2,9 @@
 
 ## Releases
 
+### v1.2.2
+- Add "passthrough" to PoE "onMode"
+
 ### v1.2.1
 - Remove logging 'Refreshing devices...' - it's displayed in debug mode
 - README fixes

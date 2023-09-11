@@ -106,6 +106,12 @@
                   ]
                 },
                 {
+                  "title": "Passthrough",
+                  "enum": [
+                    "passthrough"
+                  ]
+                },
+                {
                   "title": "Power Cycle",
                   "enum": [
                     "power_cycle"
