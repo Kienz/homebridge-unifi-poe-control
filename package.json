@@ -1,7 +1,7 @@
 {
   "name": "homebridge-unifi-poe-control",
   "displayName": "UniFi PoE Control",
-  "version": "1.2.3",
+  "version": "1.2.2",
   "description": "UniFi PoE Control for Homebridge",
   "main": "src/index.js",
   "repository": "git://github.com/Kienz/homebridge-unifi-poe-control.git",
@@ -23,7 +23,7 @@
     "eslint": "8.3.0"
   },
   "funding": {
-    "type": "paypal",
-    "url": "https://paypal.me/kienzs"
+    "type" : "paypal",
+    "url" : "https://paypal.me/kienzs"
   }
 }
