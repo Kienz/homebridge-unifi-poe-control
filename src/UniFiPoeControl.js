@@ -17,6 +17,7 @@ module.exports = class UniFiPoeControl {
     this.config = config;
     this.api = api;
     this.client = this.getClient();
+    this.apiRequestPending = false;
 
     this.accessories = [];
 

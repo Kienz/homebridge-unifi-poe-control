@@ -6,9 +6,6 @@ module.exports = class UniFiDevice {
     this.plugin = plugin;
     this.homeKitAccessory = homeKitAccessory;
 
-    this.changePending = false;
-    this._debouncedSetAllProperties = debounce(this._setAllProperties, 1000);
-
     this._hookCharacteristics();
   }
 
@@ -67,7 +64,7 @@ module.exports = class UniFiDevice {
       this.getCharacteristic(Characteristic.On).updateValue(false);
     }
 
-    if (!this.changePending) {
+    if (!this.plugin.apiRequestPending) {
       if (this.port_onMode !== 'power_cycle') {
         this.getCharacteristic(Characteristic.On).updateValue(port.poe_mode !== 'off');
       }
@@ -100,8 +97,8 @@ module.exports = class UniFiDevice {
     } catch (e) {};
 
     if (!foundDevice) {
-      this.plugin.log.warn(`Device (ID: ${this.device_id}, MAC: ${this.mac}) doesn't exists`);
-      this.changePending = false;
+      this.plugin.log.warn(`Device (ID: ${this.device_id}, MAC: ${this.mac}, Port: ${this.port_idx}) doesn't exists`);
+      this.plugin.apiRequestPending = false;
       return await this.plugin.refreshDevices();
     }
 
@@ -122,8 +119,8 @@ module.exports = class UniFiDevice {
       }
 
       if (!poePortEnabled) {
-        this.plugin.log.info(`Device (ID: ${this.device_id}, MAC: ${this.mac}): Power Cycle not available - POE is turned off`);
-        this.changePending = false;
+        this.plugin.log.info(`Device (ID: ${this.device_id}, MAC: ${this.mac}), Port: ${this.port_idx} - Power Cycle not available - POE is turned off`);
+        this.plugin.apiRequestPending = false;
         
         // Reset characteristic value - is always "false"
         this.getCharacteristic(Characteristic.On).updateValue(false);
@@ -137,7 +134,7 @@ module.exports = class UniFiDevice {
         'cmd': 'power-cycle'
       };
 
-      this.changePending = false;
+      this.plugin.apiRequestPending = false;
 
       return this.setPowerCycle(properties);
 
@@ -160,14 +157,14 @@ module.exports = class UniFiDevice {
         device_id: this.device_id
       };
 
-      this.changePending = false;
+      this.plugin.apiRequestPending = false;
 
       return this.setProperties(properties);
     }
   }
 
   async setProperties(properties) {
-    this.plugin.log.info(`Device (ID: ${this.device_id}, MAC: ${this.mac}): Update "port_overrides"`);
+    this.plugin.log.info(`Device (ID: ${this.device_id}, MAC: ${this.mac}), Port: ${this.port_idx} - Update "port_overrides"`);
 
     try {
       await this.plugin.client.setDevice(this.site.name, this.device_id, properties);
@@ -180,7 +177,7 @@ module.exports = class UniFiDevice {
   }
 
   async setPowerCycle(properties) {
-    this.plugin.log.info(`Device (ID: ${this.device_id}, MAC: ${this.mac}): Command "power_cycle"`);
+    this.plugin.log.info(`Device (ID: ${this.device_id}, MAC: ${this.mac}), Port: ${this.port_idx} - Command "power_cycle"`);
     
     // Reset characteristic value - is always "false"
     this.getCharacteristic(Characteristic.On).updateValue(false);
@@ -196,8 +193,12 @@ module.exports = class UniFiDevice {
   }
 
   set(value, callback) {
-    this.changePending = true;
-    this._debouncedSetAllProperties();
-    callback();
+    if (this.plugin.apiRequestPending) {
+      setTimeout(this.set.bind(this), 1000, value, callback);
+    } else {
+      this.plugin.apiRequestPending = true;
+      this._setAllProperties();
+      callback();
+    }
   }
-};
+}

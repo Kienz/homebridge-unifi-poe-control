@@ -2,6 +2,9 @@
 
 ## Releases
 
+### v1.3.0
+- Multiple UniFiOS API calls should wait unit previous calls are completed
+
 ### v1.2.2
 - Add "passthrough" to PoE "onMode"
 
