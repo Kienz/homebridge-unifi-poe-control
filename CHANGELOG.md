@@ -2,6 +2,9 @@
 
 ## Releases
 
+### v1.3.1
+- Change logging of "401 Unauthorized" error - changed from "error" to "debug"
+
 ### v1.3.0
 - Multiple UniFiOS API calls should wait unit previous calls are completed
 
