@@ -27,7 +27,7 @@ module.exports = class UniFiAPI {
       if ([401].includes(e.response.status)) {
         this.log.debug(`Session expired ${url} ${e}`);
       } else {
-        this.log.error(`Request-Error ${url} ${e}`);
+        this.log.debug(`Request-Error ${url} ${e}`);
       }
 
       if ([401, 403].includes(e.response.status)) {
