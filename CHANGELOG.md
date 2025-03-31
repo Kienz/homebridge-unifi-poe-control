@@ -2,8 +2,11 @@
 
 ## Releases
 
-### v1.3.1
+### v1.3.2
 - Change logging of "401 Unauthorized" error - changed from "error" to "debug"
+
+### v1.3.1
+- Add Homebridge 2 Beta to package.json
 
 ### v1.3.0
 - Multiple UniFiOS API calls should wait unit previous calls are completed
